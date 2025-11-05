@@ -1,58 +1,130 @@
+/* --- REQUISIÇÃO: Definição dos Temas --- */
+
+/* Tema Padrão: Planet Nine (Azul-Púrpura) */
+:root {
+    --color-bg: #121220;
+    --color-bg-sticky: #121220; /* Fundo da barra de navegação */
+    --color-surface: #1a1a30; /* Fundo dos cards */
+    --color-surface-accent: #2a2a40; /* Inputs e seletores */
+    --color-border: #334;
+    --color-button: #4a4a88;
+    --color-button-hover: #5a5a99;
+    --color-button-danger: #a00;
+    --color-button-danger-hover: #c00;
+    --color-text-primary: #e0e0ff;
+    --color-text-secondary: #c0c0ff;
+    --color-text-heading: #a0a0ff;
+    --color-task-token-bg: #303060;
+    --color-task-token-text: #c0c0ff;
+}
+
+/* Tema Novo: Deep Sea (Azul-Verde/Oceano) */
+body.theme-deep-sea {
+    --color-bg: #0D1B2A;
+    --color-bg-sticky: #0D1B2A;
+    --color-surface: #1B263B;
+    --color-surface-accent: #2A3B4D;
+    --color-border: #415A77;
+    --color-button: #006D77;
+    --color-button-hover: #008994;
+    --color-button-danger: #a00;
+    --color-button-danger-hover: #c00;
+    --color-text-primary: #E0E1DD;
+    --color-text-secondary: #C0C5DD;
+    --color-text-heading: #A0D0FF;
+    --color-task-token-bg: #305060;
+    --color-task-token-text: #C0E0FF;
+}
+
+/* --- Fim dos Temas --- */
+
+
 body {
-    background-color: #121220;
-    color: #e0e0ff;
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     margin: 0;
     padding: 20px;
-    transition: padding 0.2s ease;
+    transition: padding 0.2s ease, background-color 0.3s ease;
 }
 
 h1 {
     text-align: center;
-    color: #a0a0ff;
+    color: var(--color-text-heading);
     font-weight: 300;
     font-size: 2em;
-    transition: font-size 0.2s ease;
+    transition: font-size 0.2s ease, color 0.3s ease;
 }
 
-#game-selector {
+#app-settings {
     max-width: 800px;
     margin: 0 auto 15px auto;
-    padding: 10px 15px;
-    background: #2a2a40;
+    background: var(--color-surface-accent);
     border-radius: 8px;
+    padding: 10px 15px;
+}
+#game-selector {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-border);
 }
-#game-selector label {
+#language-selector {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+#game-selector label,
+#language-selector label {
     display: flex;
     align-items: center;
     gap: 5px;
     cursor: pointer;
 }
-#game-selector input[type="radio"] {
-    accent-color: #a0a0ff;
+#game-selector input[type="radio"],
+#language-selector input[type="radio"] {
+    accent-color: var(--color-text-heading);
 }
 
-/* --- Estilos do Menu "Sanfona" --- */
+#speech-settings {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 10px;
+}
+#speech-rate-slider {
+    flex-grow: 1;
+    cursor: pointer;
+    accent-color: var(--color-text-heading);
+}
+#speech-rate-value {
+    min-width: 40px;
+    text-align: right;
+    font-weight: bold;
+    color: var(--color-text-secondary);
+}
+
 #team-manager-details {
     max-width: 800px;
     margin: 0 auto 15px auto;
-    background: #1a1a30;
+    background: var(--color-surface);
     border-radius: 8px;
-    border: 1px solid #334;
+    border: 1px solid var(--color-border);
 }
 #team-manager-details summary {
     padding: 10px 15px;
     font-weight: 600;
-    color: #c0c0ff;
+    color: var(--color-text-secondary);
     cursor: pointer;
     outline: none;
 }
 #team-manager-details[open] summary {
-    border-bottom: 1px solid #334;
+    border-bottom: 1px solid var(--color-border);
 }
 #team-manager-content {
     padding: 15px;
@@ -72,15 +144,15 @@ h1 {
 #team-select, #team-name-input {
     padding: 5px;
     border-radius: 4px;
-    background: #2a2a40;
-    color: #e0e0ff;
-    border: 1px solid #445;
+    background: var(--color-surface-accent);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
 }
 
 #team-name-save-button {
     padding: 5px 10px;
     font-size: 0.9em;
-    background-color: #3a3a68;
+    background-color: #3a3a68; 
 }
 
 #team-name-save-button:hover {
@@ -90,40 +162,40 @@ h1 {
 .team-actions-group {
     flex-basis: 100%; 
     margin-top: 10px;
-    border-top: 1px solid #334;
+    border-top: 1px solid var(--color-border);
     padding-top: 15px;
 }
 .danger-button {
-    background-color: #a00; 
+    background-color: var(--color-button-danger); 
     width: 100%;
     box-sizing: border-box;
 }
 .danger-button:hover {
-    background-color: #c00; 
+    background-color: var(--color-button-danger-hover); 
 }
 
 #mission-container {
     max-width: 800px;
     margin: auto;
-    background: #1a1a30;
-    border: 1px solid #334;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 25px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    transition: padding 0.2s ease;
+    transition: padding 0.2s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 #mission-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #334;
+    border-bottom: 1px solid var(--color-border);
     padding-bottom: 15px;
     margin-bottom: 15px;
 }
 #mission-header h2 {
     margin: 0;
-    color: #c0c0ff;
+    color: var(--color-text-secondary);
 }
 .mission-meta {
     display: flex;
@@ -133,8 +205,8 @@ h1 {
     font-weight: 600;
 }
 #mission-meta-value {
-    color: #c0c0ff;
-    background-color: #303060;
+    color: var(--color-text-secondary);
+    background-color: var(--color-task-token-bg);
     padding: 2px 8px;
     border-radius: 4px;
     min-width: 20px;
@@ -147,7 +219,6 @@ h1 {
     border-radius: 50px;
 }
 
-/* --- REQUISIÇÃO: Estilos do Botão de Áudio --- */
 #play-audio-button {
     float: right;
     margin-left: 10px;
@@ -163,19 +234,19 @@ h1 {
 #mission-story {
     font-size: 1.1em;
     line-height: 1.6;
-    color: #d0d0ff;
+    color: var(--color-text-primary);
 }
 
 #mission-rules {
-    background: #2a2a40;
-    border: 1px solid #445;
+    background: var(--color-surface-accent);
+    border: 1px solid var(--color-border);
     padding: 15px;
     border-radius: 5px;
     margin-top: 15px;
     color: #fff;
     font-weight: 600;
     line-height: 1.5;
-    clear: both; /* Garante que o float do botão não afete */
+    clear: both; 
 }
 
 #mission-tracker {
@@ -184,7 +255,7 @@ h1 {
     gap: 15px;
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 1px solid #334;
+    border-top: 1px solid var(--color-border);
     flex-wrap: wrap; 
 }
 .attempts-group {
@@ -197,9 +268,9 @@ h1 {
     width: 60px;
     padding: 8px;
     border-radius: 4px;
-    border: 1px solid #445;
-    background: #2a2a40;
-    color: #e0e0ff;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-accent);
+    color: var(--color-text-primary);
     font-size: 1em;
     flex-grow: 1; 
     min-width: 50px;
@@ -220,7 +291,7 @@ button {
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
-    background-color: #4a4a88;
+    background-color: var(--color-button);
     color: white;
     font-size: 1em;
     cursor: pointer;
@@ -228,7 +299,7 @@ button {
 }
 
 button:hover {
-    background-color: #5a5a99;
+    background-color: var(--color-button-hover);
 }
 
 button:disabled {
@@ -247,15 +318,14 @@ button:disabled {
     max-width: 800px;
     margin: 0 auto 10px auto; 
     padding: 10px;
-    background-color: #121220; 
-    border-bottom: 1px solid #334; 
+    background-color: var(--color-bg-sticky); 
+    border-bottom: 1px solid var(--color-border); 
     box-sizing: border-box; 
 }
 #navigation button {
     font-weight: bold;
     font-size: 1.1em;
 }
-
 
 #mission-icons {
     display: flex;
@@ -275,8 +345,8 @@ button:disabled {
 }
 
 .icon.task-token {
-    background-color: #303060;
-    color: #c0c0ff;
+    background-color: var(--color-task-token-bg);
+    color: var(--color-task-token-text);
     min-width: 20px;
 }
 .icon.special-rule {
@@ -325,11 +395,22 @@ button:disabled {
     h1 {
         font-size: 1.5em;
     }
-    #game-selector {
+    #app-settings {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    #game-selector, #language-selector {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--color-border);
     }
+    #speech-settings {
+        padding: 0;
+    }
+
 
     #team-manager-content {
         flex-direction: column;

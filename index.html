@@ -8,40 +8,53 @@
 </head>
 <body>
     
-    <div id="game-selector">
-        <label>
-            <input type="radio" name="game-choice" value="planet_nine" checked>
-            Em Busca do Nono Planeta
-        </label>
-        <label>
-            <input type="radio" name="game-choice" value="deep_sea">
-            Missão no Fundo do Mar
-        </label>
+    <div id="app-settings">
+        <div id="game-selector">
+            <label>
+                <input type="radio" name="game-choice" value="planet_nine" checked>
+                Em Busca do Nono Planeta
+            </label>
+            <label>
+                <input type="radio" name="game-choice" value="deep_sea">
+                Missão no Fundo do Mar
+            </label>
+        </div>
+        
+        <div id="language-selector">
+            <label>
+                <input type="radio" name="lang-choice" value="pt-BR" checked>
+                Português
+            </label>
+            <label>
+                <input type="radio" name="lang-choice" value="en">
+                English
+            </label>
+        </div>
+
+        <div id="speech-settings">
+            <label for="speech-rate-slider" data-lang-key="ui:speech_rate">Velocidade da Voz:</label>
+            <input type="range" id="speech-rate-slider" min="0.5" max="2" step="0.1" value="1">
+            <span id="speech-rate-value">1.0x</span>
+        </div>
     </div>
 
-    <h1 id="main-title">A Tripulação: Em Busca do Nono Planeta</h1>
+    <h1 id="main-title" data-lang-key="planet_nine:title">A Tripulação: Em Busca do Nono Planeta</h1>
 
     <details id="team-manager-details">
-        <summary>Gerenciar Tripulação</summary>
+        <summary data-lang-key="ui:manage_crew">Gerenciar Tripulação</summary>
         <div id="team-manager-content">
             <div class="team-select-group">
-                <label for="team-select">Tripulação Ativa:</label>
+                <label for="team-select" data-lang-key="ui:active_crew">Tripulação Ativa:</label>
                 <select id="team-select">
-                    <option value="1">Tripulação 1</option>
-                    <option value="2">Tripulação 2</option>
-                    <option value="3">Tripulação 3</option>
-                    <option value="4">Tripulação 4</option>
-                    <option value="5">Tripulação 5</option>
-                    <option value="6">Tripulação 6</option>
-                </select>
+                    </select>
             </div>
             <div class="team-name-group">
-                <label for="team-name-input">Nomear Tripulação:</label>
-                <input type="text" id="team-name-input" placeholder="Dê um nome...">
-                <button id="team-name-save-button">Salvar Nome</button>
+                <label for="team-name-input" data-lang-key="ui:crew_name">Nomear Tripulação:</label>
+                <input type="text" id="team-name-input" data-lang-key="ui:crew_name_placeholder" placeholder="Dê um nome...">
+                <button id="team-name-save-button" data-lang-key="ui:save_name">Salvar Nome</button>
             </div>
             <div class="team-actions-group">
-                <button id="clear-team-data-button" class="danger-button">Limpar Dados desta Tripulação</button>
+                <button id="clear-team-data-button" class="danger-button" data-lang-key="ui:clear_data">Limpar Dados desta Tripulação</button>
             </div>
         </div>
     </details>
@@ -57,7 +70,7 @@
         <div id="mission-header">
             <h2 id="mission-number">Missão: 1</h2>
             <div class="mission-meta">
-                <span id="mission-meta-label">Tarefas:</span>
+                <span id="mission-meta-label" data-lang-key="planet_nine:meta_label">Tarefas:</span>
                 <div id="mission-meta-value">1</div>
             </div>
         </div>
@@ -65,24 +78,26 @@
         <div id="mission-icons"></div>
 
         <div id="mission-content">
-            <button id="play-audio-button">🔈 Ouvir História</button>
-            
+            <button id="play-audio-button" data-lang-key="ui:listen">🔈 Ouvir História</button>
             <p id="mission-story"></p>
             <div id="mission-rules" style="display: none;"></div>
         </div>
 
         <div id="mission-tracker">
             <div class="attempts-group">
-                <label for="attempts-input">Tentativas:</label>
+                <label for="attempts-input" data-lang-key="ui:attempts">Tentativas:</label>
                 <input type="number" id="attempts-input" min="0" value="0">
-                <button id="save-button">Salvar</button>
+                <button id="save-button" data-lang-key="ui:save">Salvar</button>
             </div>
-            <div id="total-attempts">Total: 0</div>
+            <div id="total-attempts" data-lang-key="ui:total">Total: 0</div>
         </div>
     </div>
 
-    <script src="missions_planet_nine.js"></script>
-    <script src="missions_deep_sea.js"></script>
+    <script src="missions_planet_nine_pt.js"></script>
+    <script src="missions_planet_nine_en.js"></script>
+    <script src="missions_deep_sea_pt.js"></script>
+    <script src="missions_deep_sea_en.js"></script>
+    
     <script src="app.js"></script>
 </body>
 </html>
