@@ -3,11 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Tripulação - Logbook Digital</title>
+    <title>The Crew - Logbook Digital</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>A Tripulação: Em Busca do Nono Planeta</h1>
+    
+    <div id="game-selector">
+        <label>
+            <input type="radio" name="game-choice" value="planet_nine" checked>
+            Em Busca do Nono Planeta
+        </label>
+        <label>
+            <input type="radio" name="game-choice" value="deep_sea">
+            Missão no Fundo do Mar
+        </label>
+    </div>
+
+    <h1 id="main-title">A Tripulação: Em Busca do Nono Planeta</h1>
 
     <details id="team-manager-details">
         <summary>Gerenciar Tripulação</summary>
@@ -31,10 +43,20 @@
         </div>
     </details>
 
+    <div id="navigation">
+        <button id="first-mission">1</button>
+        <button id="prev-mission">&lt;</button>
+        <button id="next-mission">&gt;</button>
+        <button id="last-mission">50</button>
+    </div>
+
     <div id="mission-container">
         <div id="mission-header">
             <h2 id="mission-number">Missão: 1</h2>
-            <div id="mission-tasks">Tarefas: 1</div>
+            <div class="mission-meta">
+                <span id="mission-meta-label">Tarefas:</span>
+                <div id="mission-meta-value">1</div>
+            </div>
         </div>
 
         <div id="mission-icons"></div>
@@ -52,16 +74,11 @@
             </div>
             <div id="total-attempts">Total: 0</div>
         </div>
-
-        <div id="navigation">
-            <button id="first-mission">1</button>
-            <button id="prev-mission">&lt;</button>
-            <button id="next-mission">&gt;</button>
-            <button id="last-mission">50</button>
-        </div>
     </div>
 
-    <script src="missions.js"></script>
+    <script src="missions_planet_nine.js"></script>
+    <script src="missions_deep_sea.js"></script>
+    
     <script src="app.js"></script>
 </body>
 </html>

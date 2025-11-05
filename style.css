@@ -15,7 +15,29 @@ h1 {
     transition: font-size 0.2s ease;
 }
 
-/* --- REQUISIÇÃO 1: Estilos do Menu "Sanfona" --- */
+/* --- NOVO: Seletor de Jogo --- */
+#game-selector {
+    max-width: 800px;
+    margin: 0 auto 15px auto;
+    padding: 10px 15px;
+    background: #2a2a40;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+#game-selector label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+#game-selector input[type="radio"] {
+    accent-color: #a0a0ff;
+}
+
+/* --- Estilos do Menu "Sanfona" --- */
 #team-manager-details {
     max-width: 800px;
     margin: 0 auto 15px auto;
@@ -41,8 +63,6 @@ h1 {
     align-items: center;
     gap: 15px;
 }
-/* --- Fim da Requisição 1 --- */
-
 
 .team-select-group, .team-name-group {
     display: flex;
@@ -87,16 +107,34 @@ h1 {
     padding-bottom: 15px;
     margin-bottom: 15px;
 }
-
-#mission-header h2, #mission-header div {
+#mission-header h2 {
     margin: 0;
     color: #c0c0ff;
 }
-
-#mission-tasks {
+/* ATUALIZADO: Meta-dados dinâmicos */
+.mission-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-size: 1.2em;
     font-weight: 600;
 }
+#mission-meta-value {
+    color: #c0c0ff;
+    background-color: #303060;
+    padding: 2px 8px;
+    border-radius: 4px;
+    min-width: 20px;
+    text-align: center;
+}
+/* Específico para Deep Sea (Dificuldade) */
+.mission-meta.difficulty #mission-meta-value {
+    background-color: #900;
+    color: #fff;
+    border: 2px solid #c00;
+    border-radius: 50px; /* Círculo */
+}
+
 
 #mission-story {
     font-size: 1.1em;
@@ -115,7 +153,6 @@ h1 {
     line-height: 1.5;
 }
 
-/* --- REQUISIÇÃO 3: Grupo de Tentativas --- */
 #mission-tracker {
     display: flex;
     align-items: center;
@@ -123,13 +160,13 @@ h1 {
     margin-top: 20px;
     padding-top: 20px;
     border-top: 1px solid #334;
-    flex-wrap: wrap; /* Permite quebrar em telas menores se necessário */
+    flex-wrap: wrap; 
 }
 .attempts-group {
     display: flex;
     align-items: center;
     gap: 10px;
-    flex-grow: 1; /* Ocupa o espaço */
+    flex-grow: 1; 
 }
 #attempts-input {
     width: 60px;
@@ -139,11 +176,11 @@ h1 {
     background: #2a2a40;
     color: #e0e0ff;
     font-size: 1em;
-    flex-grow: 1; /* Input expande */
+    flex-grow: 1; 
     min-width: 50px;
 }
 #save-button {
-    flex-shrink: 0; /* Botão não encolhe */
+    flex-shrink: 0; 
 }
 #total-attempts {
     flex-grow: 1;
@@ -151,10 +188,8 @@ h1 {
     font-size: 1.3em;
     font-weight: bold;
     color: #fff;
-    min-width: 100px; /* Garante espaço */
+    min-width: 100px; 
 }
-/* --- Fim da Requisição 3 --- */
-
 
 button {
     padding: 10px 15px;
@@ -177,18 +212,24 @@ button:disabled {
     opacity: 0.7;
 }
 
-/* --- REQUISIÇÃO 2: Estilos de Navegação --- */
 #navigation {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
-    margin-top: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    max-width: 800px;
+    margin: 0 auto 10px auto; 
+    padding: 10px;
+    background-color: #121220; 
+    border-bottom: 1px solid #334; 
+    box-sizing: border-box; 
 }
 #navigation button {
     font-weight: bold;
     font-size: 1.1em;
 }
-/* --- Fim da Requisição 2 --- */
 
 
 #mission-icons {
@@ -208,23 +249,54 @@ button:disabled {
     font-size: 1.1em;
 }
 
+/* Ícones Nono Planeta */
 .icon.task-token {
     background-color: #303060;
     color: #c0c0ff;
     min-width: 20px;
 }
-
 .icon.special-rule {
     background-color: #883030;
     color: #fff;
     font-size: 1.4em;
 }
-
 .icon.special-rule.omega {
     background-color: #887030;
 }
 
-/* --- Responsividade para Celular (Atualizada) --- */
+/* --- NOVO: Ícones Deep Sea --- */
+.icon.comm-penalty {
+    background-color: #006600;
+    color: white;
+    border-radius: 50px;
+    width: 25px;
+    height: 25px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+.icon.comm-penalty.q-mark {
+    background-color: #006600;
+    border: 2px solid white;
+}
+.icon.comm-penalty.no-comm {
+    background-color: #883030;
+    text-decoration: line-through;
+}
+.icon.timer {
+    background-color: #222;
+    color: #fff;
+    border: 2px solid #555;
+    font-family: monospace;
+    font-size: 1em;
+}
+.icon.task-card {
+    background-color: #ccc;
+    color: #222;
+    border: 2px solid #555;
+}
+
+
+/* --- Responsividade para Celular --- */
 @media (max-width: 600px) {
     body {
         padding: 10px;
@@ -232,8 +304,12 @@ button:disabled {
     h1 {
         font-size: 1.5em;
     }
+    #game-selector {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
 
-    /* Ajusta o gerenciador de tripulação no celular */
     #team-manager-content {
         flex-direction: column;
         align-items: stretch;
@@ -247,11 +323,17 @@ button:disabled {
         box-sizing: border-box; 
     }
 
+    #navigation {
+        width: 100%;
+        padding: 10px 0; 
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
     #mission-container {
         padding: 15px;
     }
 
-    /* Ajusta o tracker de missão no celular (Requisição 3) */
     #mission-tracker {
         flex-direction: column;
         align-items: stretch;
@@ -261,20 +343,11 @@ button:disabled {
         margin-left: 0;
         text-align: right;
     }
-    /* O .attempts-group já fica em linha por padrão (flex), o que é correto */
     .attempts-group #attempts-input {
-        width: 100%; /* Ocupa o espaço restante */
+        width: 100%;
     }
     .attempts-group #save-button {
-        width: auto; /* Tamanho automático, não 100% */
+        width: auto;
         flex-shrink: 0;
-    }
-
-    /* Ajusta navegação no celular (Requisição 2) */
-    #navigation {
-        gap: 5px; /* Menor espaçamento */
-    }
-    #navigation button {
-        padding: 10px 5px; /* Menor padding lateral */
     }
 }
