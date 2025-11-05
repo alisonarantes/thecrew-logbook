@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Tripulação - Logbook Digital</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>A Tripulação: Em Busca do Nono Planeta</h1>
+
+    <div id="team-manager">
+        <div class="team-select-group">
+            <label for="team-select">Tripulação Ativa:</label>
+            <select id="team-select">
+                <option value="1">Tripulação 1</option>
+                <option value="2">Tripulação 2</option>
+                <option value="3">Tripulação 3</option>
+                <option value="4">Tripulação 4</option>
+                <option value="5">Tripulação 5</option>
+                <option value="6">Tripulação 6</option>
+            </select>
+        </div>
+        <div class="team-name-group">
+            <label for="team-name-input">Nomear Tripulação:</label>
+            <input type="text" id="team-name-input" placeholder="Dê um nome...">
+            <button id="team-name-save-button">Salvar Nome</button>
+        </div>
+    </div>
+
+    <div id="mission-container">
+        <div id="mission-header">
+            <h2 id="mission-number">Missão: 1</h2>
+            <div id="mission-tasks">Tarefas: 1</div>
+        </div>
+
+        <div id="mission-icons"></div>
+
+        <div id="mission-content">
+            <p id="mission-story"></p>
+            <div id="mission-rules" style="display: none;"></div>
+        </div>
+
+        <div id="mission-tracker">
+            <label for="attempts-input">Tentativas:</label>
+            <input type="number" id="attempts-input" min="0" value="0">
+            <button id="save-button">Salvar</button>
+            <div id="total-attempts">Total: 0</div>
+        </div>
+
+        <div id="navigation">
+            <div class="nav-group-left">
+                <button id="first-mission">Primeira</button>
+                <button id="prev-mission">Anterior</button>
+            </div>
+            <div class="nav-group-right">
+                <button id="next-mission">Próxima</button>
+                <button id="last-mission">Última</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="missions.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
