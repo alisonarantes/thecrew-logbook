@@ -14,17 +14,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const missionIconsEl = document.getElementById('mission-icons');
     const attemptsInput = document.getElementById('attempts-input');
     const saveButton = document.getElementById('save-button');
-    const prevButton = document.getElementById('prev-mission');
-    const nextButton = document.getElementById('next-mission');
     const teamSelectEl = document.getElementById('team-select');
     const totalAttemptsEl = document.getElementById('total-attempts');
     const teamNameInput = document.getElementById('team-name-input');
     const teamNameSaveButton = document.getElementById('team-name-save-button');
 
+    // --- CORREÇÃO AQUI: Seleciona TODOS os 4 botões ---
+    const firstMissionButton = document.getElementById('first-mission');
+    const prevButton = document.getElementById('prev-mission');
+    const nextButton = document.getElementById('next-mission');
+    const lastMissionButton = document.getElementById('last-mission');
+
+
     let allTeamsData = {};
     let activeTeamId = '1';
 
-    // ATUALIZADO: Adiciona a propriedade 'name'
     function initializeData() {
         const defaultData = {};
         for (let i = 1; i <= 6; i++) {
@@ -51,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('crewLogbookProgress', JSON.stringify(allTeamsData));
     }
 
-    // ATUALIZADO: Carrega os nomes salvos para o <select>
     function loadProgress() {
         const savedData = localStorage.getItem('crewLogbookProgress');
         if (savedData) {
@@ -60,9 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
             allTeamsData = initializeData();
         }
 
-        // Popula o <select> com os nomes salvos
         for (const teamId in allTeamsData) {
-            if (!allTeamsData[teamId]) { // Garante que dados antigos sejam compatíveis
+            if (!allTeamsData[teamId] || !allTeamsData[teamId].name) { 
                  allTeamsData[teamId] = { name: `Tripulação ${teamId}`, attempts: {}, currentMissionIndex: 0 };
             }
             const teamName = allTeamsData[teamId].name;
@@ -74,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateTotalAttempts() {
-        if (!allTeamsData[activeTeamId]) return; // Proteção
+        if (!allTeamsData[activeTeamId]) return;
         const teamAttempts = allTeamsData[activeTeamId].attempts;
         let total = 0;
         for (const missionNumber in teamAttempts) {
@@ -131,19 +133,21 @@ document.addEventListener('DOMContentLoaded', () => {
         attemptsInput.value = allTeamsData[activeTeamId].attempts[mission.number] || 0;
         allTeamsData[activeTeamId].currentMissionIndex = missionIndex;
 
+        // --- CORREÇÃO AQUI: Atualiza TODOS os 4 botões ---
+        firstMissionButton.disabled = (missionIndex === 0);
         prevButton.disabled = (missionIndex === 0);
         nextButton.disabled = (missionIndex === missions.length - 1);
+        lastMissionButton.disabled = (missionIndex === missions.length - 1);
+        
         updateTotalAttempts();
     }
 
-    // --- Event Listeners ---
+    // --- Event Listeners (Toda a lógica de clique) ---
 
-    nextButton.addEventListener('click', () => {
-        let currentMissionIndex = allTeamsData[activeTeamId].currentMissionIndex;
-        if (currentMissionIndex < missions.length - 1) {
-            renderMission(currentMissionIndex + 1);
-            saveProgress(); 
-        }
+    // --- CORREÇÃO AQUI: Adiciona o clique para 'first-mission' ---
+    firstMissionButton.addEventListener('click', () => {
+        renderMission(0);
+        saveProgress();
     });
 
     prevButton.addEventListener('click', () => {
@@ -152,6 +156,20 @@ document.addEventListener('DOMContentLoaded', () => {
             renderMission(currentMissionIndex - 1);
             saveProgress(); 
         }
+    });
+        
+    nextButton.addEventListener('click', () => {
+        let currentMissionIndex = allTeamsData[activeTeamId].currentMissionIndex;
+        if (currentMissionIndex < missions.length - 1) {
+            renderMission(currentMissionIndex + 1);
+            saveProgress(); 
+        }
+    });
+
+    // --- CORREÇÃO AQUI: Adiciona o clique para 'last-mission' ---
+    lastMissionButton.addEventListener('click', () => {
+        renderMission(missions.length - 1);
+        saveProgress();
     });
 
     saveButton.addEventListener('click', () => {
@@ -172,34 +190,28 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => { saveButton.textContent = 'Salvar'; }, 1000);
     });
 
-    // ATUALIZADO: Atualiza o input de nome ao trocar de equipe
     teamSelectEl.addEventListener('change', (e) => {
         activeTeamId = e.target.value;
         if (!allTeamsData[activeTeamId]) {
             allTeamsData[activeTeamId] = { name: `Tripulação ${activeTeamId}`, attempts: {}, currentMissionIndex: 0 };
         }
-        teamNameInput.value = allTeamsData[activeTeamId].name; // Atualiza o input
+        teamNameInput.value = allTeamsData[activeTeamId].name; 
         renderMission(allTeamsData[activeTeamId].currentMissionIndex);
     });
 
-    // NOVO: Salva o nome da equipe
     teamNameSaveButton.addEventListener('click', () => {
         const newName = teamNameInput.value.trim();
-        if (newName === "") return; // Não permite nomes em branco
+        if (newName === "") return; 
 
-        // 1. Salva o nome no objeto de dados
         allTeamsData[activeTeamId].name = newName;
 
-        // 2. Atualiza o texto na lista <select>
         const option = teamSelectEl.querySelector(`option[value="${activeTeamId}"]`);
         if (option) {
             option.textContent = newName;
         }
         
-        // 3. Salva no localStorage
         saveProgress(); 
 
-        // Feedback
         teamNameSaveButton.textContent = 'Salvo!';
         setTimeout(() => { teamNameSaveButton.textContent = 'Salvar Nome'; }, 1000);
     });
@@ -214,7 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
         saveProgress();
     }
 
-    // Define o valor inicial do input de nome
     teamNameInput.value = allTeamsData[activeTeamId].name;
     
     renderMission(allTeamsData[activeTeamId].currentMissionIndex); 

@@ -15,18 +15,34 @@ h1 {
     transition: font-size 0.2s ease;
 }
 
-#team-manager {
+/* --- REQUISIÇÃO 1: Estilos do Menu "Sanfona" --- */
+#team-manager-details {
     max-width: 800px;
     margin: 0 auto 15px auto;
-    padding: 10px 15px;
     background: #1a1a30;
     border-radius: 8px;
+    border: 1px solid #334;
+}
+#team-manager-details summary {
+    padding: 10px 15px;
+    font-weight: 600;
+    color: #c0c0ff;
+    cursor: pointer;
+    outline: none;
+}
+#team-manager-details[open] summary {
+    border-bottom: 1px solid #334;
+}
+#team-manager-content {
+    padding: 15px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: 15px;
 }
+/* --- Fim da Requisição 1 --- */
+
 
 .team-select-group, .team-name-group {
     display: flex;
@@ -99,6 +115,7 @@ h1 {
     line-height: 1.5;
 }
 
+/* --- REQUISIÇÃO 3: Grupo de Tentativas --- */
 #mission-tracker {
     display: flex;
     align-items: center;
@@ -106,12 +123,14 @@ h1 {
     margin-top: 20px;
     padding-top: 20px;
     border-top: 1px solid #334;
+    flex-wrap: wrap; /* Permite quebrar em telas menores se necessário */
 }
-
-#mission-tracker label {
-    font-size: 1.1em;
+.attempts-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1; /* Ocupa o espaço */
 }
-
 #attempts-input {
     width: 60px;
     padding: 8px;
@@ -120,14 +139,22 @@ h1 {
     background: #2a2a40;
     color: #e0e0ff;
     font-size: 1em;
+    flex-grow: 1; /* Input expande */
+    min-width: 50px;
 }
-
+#save-button {
+    flex-shrink: 0; /* Botão não encolhe */
+}
 #total-attempts {
-    margin-left: auto;
+    flex-grow: 1;
+    text-align: right;
     font-size: 1.3em;
     font-weight: bold;
     color: #fff;
+    min-width: 100px; /* Garante espaço */
 }
+/* --- Fim da Requisição 3 --- */
+
 
 button {
     padding: 10px 15px;
@@ -150,16 +177,19 @@ button:disabled {
     opacity: 0.7;
 }
 
+/* --- REQUISIÇÃO 2: Estilos de Navegação --- */
 #navigation {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
     margin-top: 20px;
 }
-
-.nav-group-left, .nav-group-right {
-    display: flex;
-    gap: 10px;
+#navigation button {
+    font-weight: bold;
+    font-size: 1.1em;
 }
+/* --- Fim da Requisição 2 --- */
+
 
 #mission-icons {
     display: flex;
@@ -194,7 +224,7 @@ button:disabled {
     background-color: #887030;
 }
 
-/* --- Responsividade para Celular --- */
+/* --- Responsividade para Celular (Atualizada) --- */
 @media (max-width: 600px) {
     body {
         padding: 10px;
@@ -202,7 +232,9 @@ button:disabled {
     h1 {
         font-size: 1.5em;
     }
-    #team-manager {
+
+    /* Ajusta o gerenciador de tripulação no celular */
+    #team-manager-content {
         flex-direction: column;
         align-items: stretch;
     }
@@ -210,13 +242,16 @@ button:disabled {
         flex-direction: column;
         align-items: stretch;
     }
-    #team-select, #team-name-input, #team-name-save-button, button {
+    #team-select, #team-name-input, #team-name-save-button {
         width: 100%;
-        box-sizing: border-box; /* Garante que padding não quebre o layout */
+        box-sizing: border-box; 
     }
+
     #mission-container {
         padding: 15px;
     }
+
+    /* Ajusta o tracker de missão no celular (Requisição 3) */
     #mission-tracker {
         flex-direction: column;
         align-items: stretch;
@@ -226,12 +261,20 @@ button:disabled {
         margin-left: 0;
         text-align: right;
     }
-    #navigation {
-        flex-direction: column;
-        gap: 10px;
+    /* O .attempts-group já fica em linha por padrão (flex), o que é correto */
+    .attempts-group #attempts-input {
+        width: 100%; /* Ocupa o espaço restante */
     }
-    .nav-group-left, .nav-group-right {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+    .attempts-group #save-button {
+        width: auto; /* Tamanho automático, não 100% */
+        flex-shrink: 0;
+    }
+
+    /* Ajusta navegação no celular (Requisição 2) */
+    #navigation {
+        gap: 5px; /* Menor espaçamento */
+    }
+    #navigation button {
+        padding: 10px 5px; /* Menor padding lateral */
     }
 }

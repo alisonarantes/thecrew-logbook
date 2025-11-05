@@ -9,24 +9,27 @@
 <body>
     <h1>A Tripulação: Em Busca do Nono Planeta</h1>
 
-    <div id="team-manager">
-        <div class="team-select-group">
-            <label for="team-select">Tripulação Ativa:</label>
-            <select id="team-select">
-                <option value="1">Tripulação 1</option>
-                <option value="2">Tripulação 2</option>
-                <option value="3">Tripulação 3</option>
-                <option value="4">Tripulação 4</option>
-                <option value="5">Tripulação 5</option>
-                <option value="6">Tripulação 6</option>
-            </select>
+    <details id="team-manager-details">
+        <summary>Gerenciar Tripulação</summary>
+        <div id="team-manager-content">
+            <div class="team-select-group">
+                <label for="team-select">Tripulação Ativa:</label>
+                <select id="team-select">
+                    <option value="1">Tripulação 1</option>
+                    <option value="2">Tripulação 2</option>
+                    <option value="3">Tripulação 3</option>
+                    <option value="4">Tripulação 4</option>
+                    <option value="5">Tripulação 5</option>
+                    <option value="6">Tripulação 6</option>
+                </select>
+            </div>
+            <div class="team-name-group">
+                <label for="team-name-input">Nomear Tripulação:</label>
+                <input type="text" id="team-name-input" placeholder="Dê um nome...">
+                <button id="team-name-save-button">Salvar Nome</button>
+            </div>
         </div>
-        <div class="team-name-group">
-            <label for="team-name-input">Nomear Tripulação:</label>
-            <input type="text" id="team-name-input" placeholder="Dê um nome...">
-            <button id="team-name-save-button">Salvar Nome</button>
-        </div>
-    </div>
+    </details>
 
     <div id="mission-container">
         <div id="mission-header">
@@ -42,21 +45,19 @@
         </div>
 
         <div id="mission-tracker">
-            <label for="attempts-input">Tentativas:</label>
-            <input type="number" id="attempts-input" min="0" value="0">
-            <button id="save-button">Salvar</button>
+            <div class="attempts-group">
+                <label for="attempts-input">Tentativas:</label>
+                <input type="number" id="attempts-input" min="0" value="0">
+                <button id="save-button">Salvar</button>
+            </div>
             <div id="total-attempts">Total: 0</div>
         </div>
 
         <div id="navigation">
-            <div class="nav-group-left">
-                <button id="first-mission">Primeira</button>
-                <button id="prev-mission">Anterior</button>
-            </div>
-            <div class="nav-group-right">
-                <button id="next-mission">Próxima</button>
-                <button id="last-mission">Última</button>
-            </div>
+            <button id="first-mission">1</button>
+            <button id="prev-mission">&lt;</button>
+            <button id="next-mission">&gt;</button>
+            <button id="last-mission">50</button>
         </div>
     </div>
 
