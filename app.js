@@ -6,6 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // --- REQUISIÇÃO: API de Síntese de Fala ---
+    const speechSynthesis = window.speechSynthesis;
+    if (!speechSynthesis) {
+        console.warn("API de Síntese de Fala não suportada neste navegador.");
+    }
+
     const gameData = {
         planet_nine: {
             title: "A Tripulação: Em Busca do Nono Planeta",
@@ -39,7 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = document.getElementById('next-mission');
     const lastMissionButton = document.getElementById('last-mission');
     const gameSelectorRadios = document.querySelectorAll('input[name="game-choice"]');
-    const clearTeamDataButton = document.getElementById('clear-team-data-button'); // REQUISIÇÃO
+    const clearTeamDataButton = document.getElementById('clear-team-data-button');
+    const playAudioButton = document.getElementById('play-audio-button'); // REQUISIÇÃO
 
     // --- Variáveis de Estado ---
     let allGamesDataStorage = {}; 
@@ -91,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveProgress() {
         const currentTeamData = allGamesDataStorage[currentGameId];
-        // Assegura que a equipe ativa existe nos dados
         if (!currentTeamData[activeTeamId]) {
             currentTeamData[activeTeamId] = { name: `Tripulação ${activeTeamId}`, attempts: {}, currentMissionIndex: 0 };
         }
@@ -121,6 +127,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Funções de Renderização ---
 
     function renderMission(missionIndex) {
+        // REQUISIÇÃO: Para qualquer áudio que esteja tocando
+        if (speechSynthesis && speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+        playAudioButton.textContent = '🔈 Ouvir História';
+        playAudioButton.disabled = !speechSynthesis; // Desativa se a API não existir
+
         if (!currentMissionList || !currentMissionList[missionIndex]) {
             console.error(`Erro: 'currentMissionList' não está definido ou 'missionIndex' (${missionIndex}) é inválido.`);
             return; 
@@ -158,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!teamData) {
              console.error(`Erro: Não há dados para a equipe ${activeTeamId} no jogo ${currentGameId}`);
-             loadProgress(); // Tenta recarregar
+             loadProgress();
         }
         attemptsInput.value = teamData.attempts[mission.number] || 0;
         teamData.currentMissionIndex = missionIndex;
@@ -214,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (icons.or) {
             createIcon('special-rule', 'OU');
         }
-        if (icons.difficulty) { // Para Missão 26
+        if (icons.difficulty) {
             createIcon('special-rule', `Dificuldade ${icons.difficulty}`);
         }
         if (icons.task_cards) {
@@ -233,6 +246,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Função Principal de Troca de Jogo ---
 
     function switchGame(gameId) {
+        // REQUISIÇÃO: Para qualquer áudio que esteja tocando
+        if (speechSynthesis && speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+
         currentGameId = gameId;
         const game = gameData[gameId];
         
@@ -240,13 +258,44 @@ document.addEventListener('DOMContentLoaded', () => {
         mainTitle.textContent = game.title;
         lastMissionButton.textContent = currentMissionList.length;
 
-        loadProgress(); // Recarrega os nomes das equipes para o jogo selecionado
+        loadProgress(); 
         
         activeTeamId = teamSelectEl.value;
         const teamData = allGamesDataStorage[currentGameId][activeTeamId];
         teamNameInput.value = teamData.name;
         
         renderMission(teamData.currentMissionIndex);
+    }
+
+    // --- REQUISIÇÃO: Função de Tocar/Parar Áudio ---
+    function toggleAudioPlayback() {
+        if (!speechSynthesis) return;
+
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+            playAudioButton.textContent = '🔈 Ouvir História';
+        } else {
+            const storyText = missionStoryEl.textContent;
+            const utterance = new SpeechSynthesisUtterance(storyText);
+            
+            // Força a voz em Português do Brasil
+            utterance.lang = 'pt-BR';
+            
+            // Encontra uma voz específica se possível (opcional, mas melhora)
+            const voices = speechSynthesis.getVoices();
+            const ptVoice = voices.find(voice => voice.lang === 'pt-BR');
+            if (ptVoice) {
+                utterance.voice = ptVoice;
+            }
+
+            // Reseta o botão quando a fala terminar
+            utterance.onend = () => {
+                playAudioButton.textContent = '🔈 Ouvir História';
+            };
+
+            speechSynthesis.speak(utterance);
+            playAudioButton.textContent = 'Parar ◼️';
+        }
     }
 
     // --- Event Listeners ---
@@ -256,6 +305,8 @@ document.addEventListener('DOMContentLoaded', () => {
             switchGame(e.target.value);
         });
     });
+
+    playAudioButton.addEventListener('click', toggleAudioPlayback);
 
     firstMissionButton.addEventListener('click', () => {
         renderMission(0);
@@ -342,7 +393,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- REQUISIÇÃO: Lógica para Limpar Dados da Tripulação ---
     clearTeamDataButton.addEventListener('click', () => {
         const teamName = allGamesDataStorage[currentGameId][activeTeamId].name;
         
@@ -350,24 +400,20 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const defaultName = `Tripulação ${activeTeamId}`;
             
-            // 1. Reseta os dados no objeto principal
             allGamesDataStorage[currentGameId][activeTeamId] = {
                 name: defaultName,
                 attempts: {},
                 currentMissionIndex: 0
             };
             
-            // 2. Salva as mudanças no localStorage
             saveProgress();
             
-            // 3. Atualiza a UI (menu de gerenciamento)
             teamNameInput.value = defaultName;
             const option = teamSelectEl.querySelector(`option[value="${activeTeamId}"]`);
             if (option) {
                 option.textContent = defaultName;
             }
             
-            // 4. Renderiza a primeira missão (estado limpo)
             renderMission(0);
             
             alert(`Dados da tripulação "${teamName}" foram limpos.`);
@@ -377,7 +423,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Inicialização ---
     loadProgress(); 
-    // Define o jogo inicial com base no que estiver selecionado (ou padrão 'planet_nine')
     const initialGameId = document.querySelector('input[name="game-choice"]:checked').value || 'planet_nine';
     switchGame(initialGameId);
 });
