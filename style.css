@@ -15,7 +15,6 @@ h1 {
     transition: font-size 0.2s ease;
 }
 
-/* --- NOVO: Seletor de Jogo --- */
 #game-selector {
     max-width: 800px;
     margin: 0 auto 15px auto;
@@ -88,6 +87,22 @@ h1 {
     background-color: #4a4a88;
 }
 
+/* --- REQUISIÇÃO: Estilos do Botão de Limpar --- */
+.team-actions-group {
+    flex-basis: 100%; /* Ocupa a largura toda */
+    margin-top: 10px;
+    border-top: 1px solid #334;
+    padding-top: 15px;
+}
+.danger-button {
+    background-color: #a00; /* Vermelho escuro */
+    width: 100%;
+    box-sizing: border-box;
+}
+.danger-button:hover {
+    background-color: #c00; /* Vermelho mais claro */
+}
+
 #mission-container {
     max-width: 800px;
     margin: auto;
@@ -111,7 +126,6 @@ h1 {
     margin: 0;
     color: #c0c0ff;
 }
-/* ATUALIZADO: Meta-dados dinâmicos */
 .mission-meta {
     display: flex;
     align-items: center;
@@ -127,12 +141,11 @@ h1 {
     min-width: 20px;
     text-align: center;
 }
-/* Específico para Deep Sea (Dificuldade) */
 .mission-meta.difficulty #mission-meta-value {
     background-color: #900;
     color: #fff;
     border: 2px solid #c00;
-    border-radius: 50px; /* Círculo */
+    border-radius: 50px;
 }
 
 
@@ -249,7 +262,6 @@ button:disabled {
     font-size: 1.1em;
 }
 
-/* Ícones Nono Planeta */
 .icon.task-token {
     background-color: #303060;
     color: #c0c0ff;
@@ -264,7 +276,6 @@ button:disabled {
     background-color: #887030;
 }
 
-/* --- NOVO: Ícones Deep Sea --- */
 .icon.comm-penalty {
     background-color: #006600;
     color: white;
@@ -295,8 +306,6 @@ button:disabled {
     border: 2px solid #555;
 }
 
-
-/* --- Responsividade para Celular --- */
 @media (max-width: 600px) {
     body {
         padding: 10px;

@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Verificação inicial de dados
     if (typeof missions_planet_nine === 'undefined' || typeof missions_deep_sea === 'undefined') {
         console.error("ERRO CRÍTICO: Os arquivos de missão 'missions_planet_nine.js' e/ou 'missions_deep_sea.js' não foram carregados.");
         document.body.innerHTML = "<h1 style='color: red;'>ERRO: Arquivos de missão não encontrados. Renomeie 'missions.js' para 'missions_planet_nine.js' e adicione 'missions_deep_sea.js'.</h1>";
@@ -40,9 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = document.getElementById('next-mission');
     const lastMissionButton = document.getElementById('last-mission');
     const gameSelectorRadios = document.querySelectorAll('input[name="game-choice"]');
+    const clearTeamDataButton = document.getElementById('clear-team-data-button'); // REQUISIÇÃO
 
     // --- Variáveis de Estado ---
-    let allGamesDataStorage = {}; // { planet_nine: { "1": {...} }, deep_sea: { "1": {...} } }
+    let allGamesDataStorage = {}; 
     let currentGameId = 'planet_nine';
     let currentMissionList = [];
     let activeTeamId = '1';
@@ -69,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
             allGamesDataStorage = {};
         }
 
-        // Garante que ambos os jogos tenham dados de equipe
         if (!allGamesDataStorage.planet_nine) {
             allGamesDataStorage.planet_nine = initializeTeamData();
         }
@@ -77,9 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
             allGamesDataStorage.deep_sea = initializeTeamData();
         }
 
-        // Popula o <select> com os nomes salvos para o jogo ATUAL
         const currentTeamData = allGamesDataStorage[currentGameId];
         for (const teamId in currentTeamData) {
+            if (!currentTeamData[teamId] || typeof currentTeamData[teamId].name === 'undefined') {
+                currentTeamData[teamId] = { name: `Tripulação ${teamId}`, attempts: {}, currentMissionIndex: 0 };
+            }
             const teamName = currentTeamData[teamId].name;
             const option = teamSelectEl.querySelector(`option[value="${teamId}"]`);
             if (option) {
@@ -90,6 +91,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveProgress() {
         const currentTeamData = allGamesDataStorage[currentGameId];
+        // Assegura que a equipe ativa existe nos dados
+        if (!currentTeamData[activeTeamId]) {
+            currentTeamData[activeTeamId] = { name: `Tripulação ${activeTeamId}`, attempts: {}, currentMissionIndex: 0 };
+        }
+
         const currentMissionNumberText = missionNumberEl.textContent.split(': ')[1];
         if (!currentMissionNumberText) return;
 
@@ -123,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const mission = currentMissionList[missionIndex];
         const teamData = allGamesDataStorage[currentGameId][activeTeamId];
 
-        // Atualiza cabeçalho e meta-dados
         missionNumberEl.textContent = `Missão: ${mission.number}`;
         if (currentGameId === 'planet_nine') {
             missionMetaLabelEl.textContent = "Tarefas:";
@@ -135,14 +140,12 @@ document.addEventListener('DOMContentLoaded', () => {
             missionMetaContainer.classList.add('difficulty');
         }
         
-        // Atualiza história e título (Deep Sea tem títulos)
         if (currentGameId === 'deep_sea' && mission.title) {
             missionStoryEl.innerHTML = `<strong>${mission.title}</strong><br>${mission.story}`;
         } else {
             missionStoryEl.textContent = mission.story;
         }
 
-        // Atualiza Regras
         if (mission.rules) {
             missionRulesEl.innerHTML = `<strong>Regra Especial:</strong> ${mission.rules}`;
             missionRulesEl.style.display = 'block';
@@ -151,14 +154,15 @@ document.addEventListener('DOMContentLoaded', () => {
             missionRulesEl.style.display = 'none';
         }
 
-        // Atualiza Ícones
         renderIcons(mission.icons);
 
-        // Atualiza dados da equipe
+        if (!teamData) {
+             console.error(`Erro: Não há dados para a equipe ${activeTeamId} no jogo ${currentGameId}`);
+             loadProgress(); // Tenta recarregar
+        }
         attemptsInput.value = teamData.attempts[mission.number] || 0;
         teamData.currentMissionIndex = missionIndex;
 
-        // Atualiza Botões
         firstMissionButton.disabled = (missionIndex === 0);
         prevButton.disabled = (missionIndex === 0);
         nextButton.disabled = (missionIndex === currentMissionList.length - 1);
@@ -193,8 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (icons.comm_split) {
             Object.entries(icons.comm_split).forEach(([range, type]) => {
-                let text = `${range}: `;
-                let el = createIcon('comm-penalty', text);
+                let el = createIcon('comm-penalty', `${range}: `);
                 if (type === '?') {
                     el.classList.add('q-mark');
                     el.textContent += '?';
@@ -237,15 +240,12 @@ document.addEventListener('DOMContentLoaded', () => {
         mainTitle.textContent = game.title;
         lastMissionButton.textContent = currentMissionList.length;
 
-        // Carrega dados da equipe para este jogo
-        loadProgress(); // Recarrega os nomes das equipes
+        loadProgress(); // Recarrega os nomes das equipes para o jogo selecionado
         
-        // Define o estado da equipe ativa
         activeTeamId = teamSelectEl.value;
         const teamData = allGamesDataStorage[currentGameId][activeTeamId];
         teamNameInput.value = teamData.name;
         
-        // Renderiza a missão salva para esta equipe neste jogo
         renderMission(teamData.currentMissionIndex);
     }
 
@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
         activeTeamId = e.target.value;
         const teamData = allGamesDataStorage[currentGameId][activeTeamId];
         
-        if (!teamData) { // Segurança caso os dados não existam
+        if (!teamData) {
             allGamesDataStorage[currentGameId][activeTeamId] = { name: `Tripulação ${activeTeamId}`, attempts: {}, currentMissionIndex: 0 };
         }
         
@@ -342,7 +342,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- REQUISIÇÃO: Lógica para Limpar Dados da Tripulação ---
+    clearTeamDataButton.addEventListener('click', () => {
+        const teamName = allGamesDataStorage[currentGameId][activeTeamId].name;
+        
+        if (confirm(`Tem certeza de que deseja limpar TODOS os dados da tripulação "${teamName}" para o jogo "${gameData[currentGameId].title}"?\n\nIsso não pode ser desfeito.`)) {
+            
+            const defaultName = `Tripulação ${activeTeamId}`;
+            
+            // 1. Reseta os dados no objeto principal
+            allGamesDataStorage[currentGameId][activeTeamId] = {
+                name: defaultName,
+                attempts: {},
+                currentMissionIndex: 0
+            };
+            
+            // 2. Salva as mudanças no localStorage
+            saveProgress();
+            
+            // 3. Atualiza a UI (menu de gerenciamento)
+            teamNameInput.value = defaultName;
+            const option = teamSelectEl.querySelector(`option[value="${activeTeamId}"]`);
+            if (option) {
+                option.textContent = defaultName;
+            }
+            
+            // 4. Renderiza a primeira missão (estado limpo)
+            renderMission(0);
+            
+            alert(`Dados da tripulação "${teamName}" foram limpos.`);
+        }
+    });
+
 
     // --- Inicialização ---
-    switchGame(currentGameId); // Inicia o jogo padrão ('planet_nine')
+    loadProgress(); 
+    // Define o jogo inicial com base no que estiver selecionado (ou padrão 'planet_nine')
+    const initialGameId = document.querySelector('input[name="game-choice"]:checked').value || 'planet_nine';
+    switchGame(initialGameId);
 });
